@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nainas",
+  "info": {
+    "singularName": "naina",
+    "pluralName": "nainas",
+    "displayName": "Naina"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "NainaGhosh": {
+      "type": "string"
+    }
+  }
+}

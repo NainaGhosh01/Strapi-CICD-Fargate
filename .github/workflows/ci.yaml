@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -33,20 +33,11 @@ jobs:
         id: image
         run: |
           IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-          echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
+          echo "Built image URI: $IMAGE_URI"
+          echo "NOTE: Please manually update the GitHub secret 'IMAGE_URI' with this value."
 
       - name: Build Docker image
         run: docker build -t $IMAGE_URI .
 
       - name: Push Docker image to ECR
         run: docker push $IMAGE_URI
-
-      - name: Save image URI for CD
-        run: echo "${{ steps.image.outputs.image_uri }}" > image-uri.txt
-
-      - name: Upload image URI as artifact
-        uses: actions/upload-artifact@v3.1.3
-        with:
-          name: strapi-image-uri
-          path: image-uri.txt

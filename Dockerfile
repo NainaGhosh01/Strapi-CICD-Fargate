@@ -4,20 +4,18 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy all app files
+# Copy the rest of the app
 COPY . .
 
-# Build Strapi project
+# Build the Strapi project (creates /dist folder)
 RUN npm run build
 
 # Expose Strapi default port
 EXPOSE 1337
 
-# Start Strapi
-CMD ["npm", "start"]
+# Run the compiled Strapi app
+CMD ["node", "dist/server.js"]

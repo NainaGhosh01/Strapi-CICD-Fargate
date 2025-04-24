@@ -1,26 +1,23 @@
-FROM node:18-bullseye
+# Use Node.js base image
+FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Install required system dependencies
-RUN apt-get update && apt-get install -y build-essential libsqlite3-dev
+# Copy package files
+COPY package*.json ./
 
-# Copy package files and install dependencies
-COPY my-strapi/package*.json ./
+# Install dependencies
 RUN npm install
 
-# Rebuild native modules like better-sqlite3
-RUN npm rebuild
+# Copy all app files
+COPY . .
 
-# Copy the rest of the code
-COPY my-strapi/ .
-
-# Build Strapi for production
+# Build Strapi project
 RUN npm run build
 
-# Expose Strapi port
+# Expose Strapi default port
 EXPOSE 1337
 
-# Start Strapi in production
-CMD ["npm", "run", "start"]
+# Start Strapi
+CMD ["npm", "start"]

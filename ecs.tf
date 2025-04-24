@@ -8,14 +8,12 @@ resource "aws_ecs_task_definition" "strapi_task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "512"
   memory                   = "1024"
-
-  execution_role_arn = aws_iam_role.naina_ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.naina_ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
       name      = "strapi"
       image     = var.strapi_image
-
       essential = true
       portMappings = [
         {
@@ -26,13 +24,31 @@ resource "aws_ecs_task_definition" "strapi_task" {
         {
           name  = "HOST"
           value = "0.0.0.0"
-        } ,
-
+        },
         {
           name  = "PORT"
           value = "1337"
-        } ,
-
+        },
+        {
+          name  = "APP_KEYS"
+          value = "toBeModified1,toBeModified2"
+        },
+        {
+          name  = "API_TOKEN_SALT"
+          value = "tobemodified"
+        },
+        {
+          name  = "ADMIN_JWT_SECRET"
+          value = "tobemodified"
+        },
+        {
+          name  = "TRANSFER_TOKEN_SALT"
+          value = "tobemodified"
+        },
+        {
+          name  = "JWT_SECRET"
+          value = "tobemodified"
+        },
         {
           name  = "VITE_HOST"
           value = "0.0.0.0"
@@ -41,8 +57,6 @@ resource "aws_ecs_task_definition" "strapi_task" {
           name  = "VITE_SERVER_ALLOWED_HOSTS"
           value = "naina-strapi-alb-1410829428.us-east-1.elb.amazonaws.com"
         }
-
-
       ]
       healthCheck = {
         command     = ["CMD-SHELL", "curl -f http://localhost:1337 || exit 1"]

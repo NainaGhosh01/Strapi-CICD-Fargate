@@ -33,7 +33,7 @@ jobs:
           ECR_REGISTRY: 724772070195.dkr.ecr.us-east-1.amazonaws.com
           ECR_REPOSITORY: naina-strapi-repo
         run: |
-          docker build -f ./my-strapi/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./my-strapi
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Terraform Init, Plan and Apply

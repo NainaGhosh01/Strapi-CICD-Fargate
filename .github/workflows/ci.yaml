@@ -37,7 +37,8 @@ jobs:
           echo "NOTE: Please manually update the GitHub secret 'IMAGE_URI' with this value."
 
       - name: Build Docker image
-        run: docker buildx build --load -t $IMAGE_URI .
+        run: |
+              docker buildx build --load -t $IMAGE_URI .
 
       - name: Push Docker image to ECR
         run: docker push $IMAGE_URI

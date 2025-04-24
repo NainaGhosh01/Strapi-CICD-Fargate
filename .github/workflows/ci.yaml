@@ -12,7 +12,7 @@ jobs:
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      IMAGE_TAG: latest2
+      IMAGE_TAG: latest
 
     steps:
       - name: Checkout code
@@ -42,10 +42,10 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push $IMAGE_URI
 
-      - name: Write image URI to file
+      - name: Save image URI for CD
         run: echo "${{ steps.image.outputs.image_uri }}" > image-uri.txt
 
-      - name: Save image URI for CD
+      - name: Upload image URI as artifact
         uses: actions/upload-artifact@v3
         with:
           name: strapi-image-uri

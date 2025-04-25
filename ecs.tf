@@ -62,16 +62,15 @@ resource "aws_ecs_task_definition" "strapi_task" {
           name  = "VITE_SERVER_ALLOWED_HOSTS"
           value = "naina-strapi-alb-1410829428.us-east-1.elb.amazonaws.com"
         },
-
-        logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.strapi_logs.name
-          awslogs-region        = var.aws_region
-          awslogs-stream-prefix = "ecs/strapi"
-        }
+      ],
+      logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/strapi"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs/strapi"
       }
-      ]
+      },
       healthCheck = {
         command     = ["CMD-SHELL", "curl -f http://localhost:1337 || exit 1"]
         interval    = 30

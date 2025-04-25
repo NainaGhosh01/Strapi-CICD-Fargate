@@ -2,6 +2,11 @@ resource "aws_ecs_cluster" "strapi_cluster" {
   name = "naina-strapi-cluster"
 }
 
+resource "aws_cloudwatch_log_group" "strapi_logs" {
+  name              = "/ecs/strapi"
+  retention_in_days = 7
+}
+
 resource "aws_ecs_task_definition" "strapi_task" {
   family                   = "strapi-task"
   network_mode             = "awsvpc"
@@ -57,6 +62,14 @@ resource "aws_ecs_task_definition" "strapi_task" {
           name  = "VITE_SERVER_ALLOWED_HOSTS"
           value = "naina-strapi-alb-1410829428.us-east-1.elb.amazonaws.com"
         }
+        logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.strapi_logs.name
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs/strapi"
+        }
+      }
       ]
       healthCheck = {
         command     = ["CMD-SHELL", "curl -f http://localhost:1337 || exit 1"]

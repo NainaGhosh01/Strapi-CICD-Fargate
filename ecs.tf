@@ -61,7 +61,8 @@ resource "aws_ecs_task_definition" "strapi_task" {
         {
           name  = "VITE_SERVER_ALLOWED_HOSTS"
           value = "naina-strapi-alb-1410829428.us-east-1.elb.amazonaws.com"
-        }
+        },
+
         logConfiguration = {
         logDriver = "awslogs"
         options = {

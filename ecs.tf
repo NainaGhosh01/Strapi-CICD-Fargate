@@ -36,12 +36,12 @@ resource "aws_ecs_task_definition" "strapi_task" {
         }
       ],
       logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = "/ecs/strapi"
-        awslogs-region        = var.aws_region
-        awslogs-stream-prefix = "ecs/strapi"
-      }
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/strapi"
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs/strapi"
+        }
       }
     }
   ])
@@ -51,12 +51,19 @@ resource "aws_ecs_service" "strapi_service" {
   name            = "strapi-service"
   cluster         = aws_ecs_cluster.strapi_cluster.id
   task_definition = aws_ecs_task_definition.strapi_task.arn
-  launch_type     = "FARGATE"
   desired_count   = 1
 
+  # IMPORTANT: Remove launch_type, use capacity_provider_strategy
+  launch_type = null
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
+
   network_configuration {
-    subnets         = aws_subnet.public[*].id
-    security_groups = [aws_security_group.ecs_sg.id]
+    subnets          = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }
 

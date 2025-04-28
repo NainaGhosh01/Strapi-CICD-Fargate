@@ -33,35 +33,7 @@ resource "aws_ecs_task_definition" "strapi_task" {
         {
           name  = "PORT"
           value = "1337"
-        },
-        {
-          name  = "APP_KEYS"
-          value = "toBeModified1,toBeModified2"
-        },
-        {
-          name  = "API_TOKEN_SALT"
-          value = "tobemodified"
-        },
-        {
-          name  = "ADMIN_JWT_SECRET"
-          value = "tobemodified"
-        },
-        {
-          name  = "TRANSFER_TOKEN_SALT"
-          value = "tobemodified"
-        },
-        {
-          name  = "JWT_SECRET"
-          value = "tobemodified"
-        },
-        {
-          name  = "VITE_HOST"
-          value = "0.0.0.0"
-        },
-        {
-          name  = "VITE_SERVER_ALLOWED_HOSTS"
-          value = "naina-strapi-alb-1410829428.us-east-1.elb.amazonaws.com"
-        },
+        }
       ],
       logConfiguration = {
       logDriver = "awslogs"
@@ -70,13 +42,6 @@ resource "aws_ecs_task_definition" "strapi_task" {
         awslogs-region        = var.aws_region
         awslogs-stream-prefix = "ecs/strapi"
       }
-      },
-      healthCheck = {
-        command     = ["CMD-SHELL", "curl -f http://localhost:1337 || exit 1"]
-        interval    = 30
-        timeout     = 10
-        retries     = 5
-        startPeriod = 60
       }
     }
   ])

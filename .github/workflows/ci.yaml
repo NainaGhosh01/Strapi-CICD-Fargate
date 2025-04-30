@@ -8,6 +8,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ECR_REGISTRY: 724772070195.dkr.ecr.us-east-1.amazonaws.com
+      ECR_REPOSITORY: naina-strapi-repo
+      IMAGE_TAG: ${{ github.sha }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,15 +33,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: 724772070195.dkr.ecr.us-east-1.amazonaws.com
-          ECR_REPOSITORY: naina-strapi-repo
+      - name: Build, tag, and push Docker image to ECR
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Terraform Init, Plan and Apply
+      - name: Terraform Init, Plan, and Apply
+        env:
+          TF_VAR_strapi_image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/${{ env.IMAGE_TAG }}
         run: |
           terraform init
           terraform plan

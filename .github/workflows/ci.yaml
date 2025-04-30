@@ -35,12 +35,18 @@ jobs:
 
       - name: Build, tag, and push Docker image to ECR
         run: |
+          # Push commit SHA tag
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+          # Push latest tag
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
       - name: Terraform Init, Plan, and Apply
         env:
-          TF_VAR_strapi_image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/${{ env.IMAGE_TAG }}
+          # Terraform will always pull latest image (matches taskdef and ECS expectations)
+          TF_VAR_strapi_image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
         run: |
           terraform init
           terraform plan

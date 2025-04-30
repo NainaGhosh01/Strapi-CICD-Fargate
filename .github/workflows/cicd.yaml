@@ -51,3 +51,12 @@ jobs:
           terraform init
           terraform plan
           terraform apply -auto-approve
+
+      - name: Trigger CodeDeploy Deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name strapi-codedeploy-app \
+            --deployment-group-name strapi-deployment-group \
+            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
+            --description "GitHub Actions triggered deployment" \
+            --region us-east-1

@@ -43,6 +43,7 @@ resource "aws_codedeploy_deployment_group" "strapi" {
       action                           = "TERMINATE"
       termination_wait_time_in_minutes = 5
     }
+  }
 
   auto_rollback_configuration {
     enabled = true

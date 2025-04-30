@@ -44,11 +44,6 @@ resource "aws_codedeploy_deployment_group" "strapi" {
       termination_wait_time_in_minutes = 5
     }
 
-    green_fleet_provisioning_option {
-      action = "DISCOVER_EXISTING"
-    }
-  }
-
   auto_rollback_configuration {
     enabled = true
     events  = ["DEPLOYMENT_FAILURE"]

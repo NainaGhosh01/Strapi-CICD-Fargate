@@ -25,12 +25,29 @@ resource "aws_lb" "strapi_alb" {
   security_groups    = [aws_security_group.alb_sg.id]
 }
 
-resource "aws_lb_target_group" "strapi_tg" {
-  name     = "naina-strapi-tg"
-  port     = 1337
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
-  target_type  = "ip"
+resource "aws_lb_target_group" "strapi_tg_blue" {
+  name        = "strapi-tg-blue"
+  port        = 1337
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.main.id
+  target_type = "ip"
+
+  health_check {
+    path                = "/"
+    matcher             = "200-399"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_target_group" "strapi_tg_green" {
+  name        = "strapi-tg-green"
+  port        = 1337
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.main.id
+  target_type = "ip"
 
   health_check {
     path                = "/"
@@ -49,6 +66,6 @@ resource "aws_lb_listener" "http_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
   }
 }

@@ -15,36 +15,32 @@ resource "aws_ecs_task_definition" "strapi_task" {
   memory                   = "1024"
   execution_role_arn       = aws_iam_role.naina_ecs_task_execution_role.arn
 
-  container_definitions = jsonencode([
-    {
-      name      = "strapi"
-      image     = var.strapi_image
-      essential = true
-      portMappings = [
-        {
-          containerPort = 1337
-        }
-      ]
-      environment = [
-        {
-          name  = "HOST"
-          value = "0.0.0.0"
-        },
-        {
-          name  = "PORT"
-          value = "1337"
-        }
-      ],
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = "/ecs/strapi"
-          awslogs-region        = var.aws_region
-          awslogs-stream-prefix = "ecs/strapi"
-        }
+  container_definitions = jsonencode([{
+    name      = "strapi"
+    image     = var.strapi_image
+    essential = true
+    portMappings = [{
+      containerPort = 1337
+    }],
+    environment = [
+      {
+        name  = "HOST"
+        value = "0.0.0.0"
+      },
+      {
+        name  = "PORT"
+        value = "1337"
+      }
+    ],
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/strapi"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs/strapi"
       }
     }
-  ])
+  }])
 }
 
 resource "aws_ecs_service" "strapi_service" {
@@ -53,13 +49,16 @@ resource "aws_ecs_service" "strapi_service" {
   task_definition = aws_ecs_task_definition.strapi_task.arn
   desired_count   = 1
 
-  # IMPORTANT: Remove launch_type, use capacity_provider_strategy
-  launch_type = null
-
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
     weight            = 1
   }
+
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
+  platform_version = "LATEST"
 
   network_configuration {
     subnets          = aws_subnet.public[*].id
@@ -68,7 +67,7 @@ resource "aws_ecs_service" "strapi_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
     container_name   = "strapi"
     container_port   = 1337
   }

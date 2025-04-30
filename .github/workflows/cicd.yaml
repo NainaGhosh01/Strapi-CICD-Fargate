@@ -58,5 +58,6 @@ jobs:
             --application-name strapi-codedeploy-app \
             --deployment-group-name strapi-deployment-group \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-            --description "GitHub Actions triggered deployment" \
-            --region us-east-1
+            --region us-east-1 \
+            --revision file://codedeploy.json \
+            --description "GitHub Actions triggered deployment"

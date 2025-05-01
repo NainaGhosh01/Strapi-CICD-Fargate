@@ -24,7 +24,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd terrfaorm
+          cd terraform
           terraform init
 
       - name: Terraform Destroy

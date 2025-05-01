@@ -1,9 +1,7 @@
-version: 1
-Resources:
-  - TargetService:
-      Type: AWS::ECS::Service
-      Properties:
-        TaskDefinition: arn:aws:ecs:us-east-1:724772070195:task-definition/strapi-task:35
-        LoadBalancerInfo:
-          ContainerName: strapi
-          ContainerPort: 1337
+{
+  "revisionType": "AppSpecContent",
+  "appSpecContent": {
+    "content": "{\"version\":1,\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"arn:aws:ecs:us-east-1:724772070195:task-definition/strapi-task:37\",\"LoadBalancerInfo\":{\"ContainerName\":\"strapi\",\"ContainerPort\":1337}}}}],\"Hooks\":[]}"
+  }
+}
+

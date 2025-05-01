@@ -48,6 +48,7 @@ jobs:
           # Terraform will always pull latest image (matches taskdef and ECS expectations)
           TF_VAR_strapi_image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
         run: |
+          cd terraform
           terraform init
           terraform plan
           terraform apply -auto-approve
